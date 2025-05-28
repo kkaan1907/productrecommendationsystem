@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Karşılaştırma Sonucu</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 40px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to right, #f8f9fa, #d7dde8);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            background-color: #fff;
+            padding: 30px 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+
+        .block {
+            background-color: #fefefe;
+            border-left: 6px solid #3498db;
+            padding: 20px 25px;
+            margin-bottom: 25px;
+            border-radius: 10px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .block p {
+            margin: 10px 0;
+            color: #444;
+            line-height: 1.6;
+        }
+
+        .block strong {
+            color: #2c3e50;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 12px 24px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+
+        .back-btn:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Seçilen Ürünlerin Karşılaştırması</h1>
+
+    {% for block in response.split('\n\n') %}
+        {% set lines = block.strip().split('\n') %}
+        {% if lines %}
+        <div class="block">
+            {% for line in lines %}
+                <p>{{ line }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+    {% endfor %}
+
+    <a href="/" class="back-btn">⬅ Ana Sayfaya Dön</a>
+</div>
+</body>
+</html>
