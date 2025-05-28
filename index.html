@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teknolojik Ürün Önerici</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(to right, #f8f9fa, #e0ecff);
+            font-family: 'Segoe UI', sans-serif;
+        }
+        h2 {
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+        }
+        label {
+            font-weight: 600;
+            color: #333;
+        }
+        .form-control {
+            border-radius: 0.5rem;
+            transition: box-shadow 0.2s ease;
+        }
+        .form-control:focus {
+            box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+        }
+        button[type="submit"] {
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container py-5">
+        <h2 class="mb-3 text-center display-5 fw-bold text-primary shadow-sm">
+            İhtiyacınıza En Uygun Teknolojik Ürünü Bulun
+        </h2>
+        <p class="text-muted text-center mb-4 fs-5">
+            Mesleğiniz, kullanım amacınız ve bütçenize göre sizin için en uygun ürünü öneriyoruz.
+        </p>
+
+        <form action="/process" method="post" class="card p-4 shadow-sm" onsubmit="return validateForm();">
+            <div class="mb-3">
+                <label for="profession">Mesleğiniz:</label>
+                <select name="profession" id="profession" class="form-control shadow-sm border-primary" required onchange="toggleCustomProfession()">
+                    <option value="">Mesleğinizi seçin</option>
+                    <option value="Avukat">Avukat</option>
+                    <option value="Bilgisayar Mühendisi">Bilgisayar Mühendisi</option>
+                    <option value="Doktor">Doktor</option>
+                    <option value="Elektrik-Elektronik Mühendisi">Elektrik-Elektronik Mühendisi</option>
+                    <option value="Endüstri Mühendisi">Endüstri Mühendisi</option>
+                    <option value="Finans Uzmanı">Finans Uzmanı</option>
+                    <option value="Freelancer">Freelancer</option>
+                    <option value="Grafik Tasarımcı">Grafik Tasarımcı</option>
+                    <option value="Hemşire">Hemşire</option>
+                    <option value="İç Mimar">İç Mimar</option>
+                    <option value="İnşaat Mühendisi">İnşaat Mühendisi</option>
+                    <option value="İşletmeci">İşletmeci</option>
+                    <option value="Kimyager">Kimyager</option>
+                    <option value="Makine Mühendisi">Makine Mühendisi</option>
+                    <option value="Mimar">Mimar</option>
+                    <option value="Muhasebeci">Muhasebeci</option>
+                    <option value="Müzisyen">Müzisyen</option>
+                    <option value="Öğretmen">Öğretmen</option>
+                    <option value="Öğrenci">Öğrenci</option>
+                    <option value="Pazarlama Uzmanı">Pazarlama Uzmanı</option>
+                    <option value="Polis">Polis</option>
+                    <option value="Psikolog">Psikolog</option>
+                    <option value="Sağlık Çalışanı">Sağlık Çalışanı</option>
+                    <option value="Serbest Meslek">Serbest Meslek</option>
+                    <option value="Sosyal Medya Uzmanı">Sosyal Medya Uzmanı</option>
+                    <option value="Veri Bilimci">Veri Bilimci</option>
+                    <option value="Web Geliştirici">Web Geliştirici</option>
+                    <option value="Yazılım Geliştirici">Yazılım Geliştirici</option>
+                    <option value="Diğer">Diğer</option>
+                </select>
+                <div id="customProfessionContainer" style="display:none;" class="mt-2">
+                    <label for="customProfession">Lütfen mesleğinizi yazın:</label>
+                    <input type="text" name="customProfession" id="customProfession"
+                     class="form-control shadow-sm"
+                    pattern=".*\S.*"
+                    title="Bu alan boş bırakılamaz.">
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="needs" class="form-label">İhtiyaçlar:</label>
+                <textarea name="needs" class="form-control shadow-sm border-secondary" rows="3" placeholder="Örneğin: Video düzenleme, oyun, taşınabilirlik" required pattern=".\S." title="Bu alan boş bırakılamaz."></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="budget" class="form-label">Bütçe (USD):</label>
+                <input type="number" name="budget" class="form-control shadow-sm" min="0" step="1" required placeholder="Örneğin: 1500">
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-lg w-100 shadow-sm">✨ En Uygun Ürünü Öner</button>
+        </form>
+
+        {% if errors %}
+        <div class="alert alert-danger mt-4 shadow-sm">
+            <ul class="mb-0">
+                {% for error in errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        function toggleCustomProfession() {
+            var select = document.getElementById("profession");
+            var custom = document.getElementById("customProfessionContainer");
+            var input = document.getElementById("customProfession");
+            if (select.value === "Diğer") {
+                custom.style.display = "block";
+                input.setAttribute("required", "required");
+            } else {
+                custom.style.display = "none";
+                input.removeAttribute("required");
+            }
+        }
+
+        function validateForm() {
+            const budget = document.querySelector('[name="budget"]');
+            if (budget.value < 0) {
+                alert("Lütfen negatif olmayan bir bütçe giriniz.");
+                return false;
+            }
+            return true;
+        }
+    </script>
+</body>
+</html>
