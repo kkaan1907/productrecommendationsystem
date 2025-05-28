@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Ürün Önerileri</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 40px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to right, #eef2f3, #8e9eab);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            background-color: #fff;
+            padding: 30px 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background-color: #fdfdfd;
+            border-left: 6px solid #4CAF50;
+            padding: 20px 25px;
+            margin-bottom: 25px;
+            border-radius: 10px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .card ul li {
+            padding: 6px 10px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            border-radius: 6px;
+        }
+
+        .card ul li:hover {
+            background-color: #e0f7e9;
+            transform: translateX(5px);
+            cursor: pointer;
+        }
+
+        .card h2 {
+            color: #34495e;
+            margin-bottom: 10px;
+        }
+
+        .card ul {
+            list-style-type: disc;
+            padding-left: 20px;
+            color: #555;
+        }
+
+        .back-btn, .compare-btn {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 12px 24px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+
+        .compare-btn:hover, .back-btn:hover {
+            background-color: #45a049;
+        }
+
+        .flash.success {
+            background-color: #d4edda;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .compare-checkbox {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+    </style>
+</head>
+<body>
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <ul class="flashes">
+    {% for category, message in messages %}
+      <li class="flash {{ category }}">{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
+<div class="container">
+    <h1>Teknolojik Ürün Önerileriniz</h1>
+
+    <form method="post" action="/compare">
+        {% for block in response.split('\n\n') %}
+            {% set lines = block.strip().split('\n') %}
+            {% if lines|length > 0 %}
+                {% set product_title = lines[0] %}
+                {% set product_details = lines[1:] %}
+                <div class="card">
+                    <label>
+                        <input type="checkbox" class="compare-checkbox" name="selected_products" value="{{ block }}">
+                        <strong>{{ product_title }}</strong>
+                    </label>
+                    <ul>
+                        {% for item in product_details %}
+                            {% if item.strip() %}
+                                <li>{{ item.strip() }}</li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+        {% endfor %}
+
+        <button type="submit" class="compare-btn">Seçilenleri Karşılaştır</button>
+        <a href="/" class="back-btn">⬅ Geri Dön</a>
+    </form>
+</div>
+</body>
+</html>
