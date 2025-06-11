@@ -9,6 +9,7 @@
             padding: 40px;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(to right, #f8f9fa, #d7dde8);
+            color: #333;
         }
 
         .container {
@@ -17,43 +18,59 @@
             background-color: #fff;
             padding: 30px 40px;
             border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
         }
 
         h1 {
             text-align: center;
             color: #2c3e50;
-            margin-bottom: 30px;
+            margin-bottom: 40px;
+            font-weight: 900;
+            font-size: 2.5rem;
+            letter-spacing: 1.2px;
         }
 
         .block {
-            background-color: #fefefe;
-            border-left: 6px solid #3498db;
-            padding: 20px 25px;
-            margin-bottom: 25px;
-            border-radius: 10px;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+            background-color: #fafafa;
+            border-left: 8px solid #3498db;
+            padding: 25px 30px;
+            margin-bottom: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.07);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .block:hover {
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
         }
 
         .block p {
-            margin: 10px 0;
-            color: #444;
-            line-height: 1.6;
+            margin: 14px 0;
+            line-height: 1.8;
+            font-size: 1.1rem;
         }
 
-        .block strong {
+        /* Özel başlıklar için */
+        .highlight-title {
+            font-weight: 900;
+            font-size: 1.6rem;
             color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 6px;
+            margin-bottom: 20px;
         }
 
         .back-btn {
             display: inline-block;
-            margin-top: 30px;
-            padding: 12px 24px;
+            margin-top: 40px;
+            padding: 14px 28px;
             background-color: #3498db;
             color: white;
             text-decoration: none;
-            border-radius: 6px;
-            font-size: 16px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 700;
+            transition: background-color 0.3s ease;
         }
 
         .back-btn:hover {
@@ -65,12 +82,32 @@
 <div class="container">
     <h1>Seçilen Ürünlerin Karşılaştırması</h1>
 
+    {% set highlight_titles = [
+        "uygunluk puanları",
+        "güçlü yönler",
+        "zayıf yönler",
+        "hangi kullanıcıya hitap ediyor",
+        "fiyat-performans değerlendirmesi",
+        "hangi meslek için daha uygun"
+    ] %}
+
     {% for block in response.split('\n\n') %}
         {% set lines = block.strip().split('\n') %}
         {% if lines %}
         <div class="block">
             {% for line in lines %}
-                <p>{{ line }}</p>
+                {% set line_lower = line.lower() %}
+                {% set is_highlight = false %}
+                {% for ht in highlight_titles %}
+                    {% if ht in line_lower %}
+                        {% set is_highlight = true %}
+                    {% endif %}
+                {% endfor %}
+                {% if is_highlight %}
+                    <p class="highlight-title">{{ line }}</p>
+                {% else %}
+                    <p>{{ line }}</p>
+                {% endif %}
             {% endfor %}
         </div>
         {% endif %}
