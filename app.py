@@ -133,7 +133,7 @@ def ask_model(prompt, model="llama3.1:8b"):
                 "3. Önerilerini verirken ürünlerin temel teknik özelliklerine, performansına, fiyat-performans dengesine ve kullanıcının meslek ve ihtiyaçlarına uygunluğuna dikkat edeceksin."
                 "Yanıtını sadece numaralı madde listesi (1., 2., 3.) şeklinde alt alta olarak ver. "
                 "Kullanıcı iyi bir tablet istediğinde ona apple ipad pro, samsung galaxy tab s9 ultra, huawei matepad 11,lenovo tab11, xiaomi redmi pad se 8 tarzı güçlü ve güncel tabletlerden öner. "
-                "Öneriler dışında başka hiçbir şey yazma"
+                "Sadece önerileri yaz, ek açıklama yapma"
                 "Girilen bütçenin üstünde ürün önerme"
                 "Öneriler sırasında kullanıcı tarafından girilen meslek seçimine dikkat ederek öner eğer kendi mesleğine uygun bir ürün önerisi istiyorsa profesyonel modeller öner."
                 "Eğer kullanıcı birden fazla teknolojik ürüne ihtiyacı varsa(örn: fotoğraf makinası ve telefon) mesleğine göre iki ürünü birleştirip beraber set olarak önerebilirsin , yeterli özelliklere sahip tek bir ürün de önerebilirsin"
@@ -196,6 +196,7 @@ Aşağıda seçilen teknolojik ürünleri detaylıca karşılaştır:
 {chr(10).join(selected_items)}
 
 Karşılaştırma sonucunda şunlara mutlaka değin:
+- Ürünler kullanıcının istekleri ve ihtiyaçlarına göre 100 üzerinden uygunluğa göre puanlansın ve açıklama olmadan sadece ürünün adı ve puanı yazsın.
 - Ürünlerin Güçlü Yönleri ve Zayıf Yönleri Nelerdir
 - Hangi Kullanıcıya Hitap Ediyor
 - Fiyat-Performans Değerlendirmesi
@@ -246,16 +247,7 @@ Uygun ürünler:
 
     return render_template('result.html', response=model_response)
 
-@app.route('/feedback', methods=['POST'])
-def feedback():
-    product_name = request.form.get('product_name')
-    feedback_type = request.form.get('feedback')
-    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    with open('feedback.csv', 'a', newline='', encoding='utf-8') as f:
-        writer = csv.writer(f)
-        writer.writerow([product_name, feedback_type, timestamp])
-    flash("Geri bildiriminiz için teşekkür ederiz!", "success")
-    return redirect(request.referrer or '/')
+
 
 if __name__ == '__main__':
         app.run(debug=True)
